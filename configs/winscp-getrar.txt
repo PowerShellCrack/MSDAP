@@ -1,0 +1,5 @@
+open ftpes://<username>@<seedbox> -hostkey="<ssh-rsa 2048 host key>" -rawsettings Shell="/bin/bash"
+cd /TV-Shows
+lpwd
+get -delete *.rar -resumesupport=on -resume
+exit
