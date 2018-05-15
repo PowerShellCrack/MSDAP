@@ -3,4 +3,4 @@ Monitor System, Downloads and Processes
 
 
 Version 1 - Batch
-SYNOPSYS: Script to automafeeding and downloading Movies and TV shows. 
+SYNOPSYS: Script to automate feeding and downloading Movies and TV shows using various applications and tools via command line
