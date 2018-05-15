@@ -1,0 +1,5 @@
+open ftpes://<username>@n<seedbox>/ -hostkey="<ssh-rsa 2048 hostkey>" -rawsettings Shell="/bin/bash"
+cd /watch
+lpwd
+put "E:\Data\Downloads\Torrents\files\*.torrent"
+exit
