@@ -21,23 +21,23 @@ set _DropboxEXEPath=C:\Program Files (x86)\Dropbox\Client
 set _DropboxPath=!userprofile!\Dropbox\Camera Uploads
 
 set _DropboxBCK=Y
-set _DropboxBCKDest=\\PLECSVR\SharedProfiles\Dropbox
+set _DropboxBCKDest=\\SERVER\SharedProfiles\Dropbox
 
 set _UTorrentCheck=N
-set _UTorrentPath=C:\Users\PlexAdmin\AppData\Roaming\uTorrent
+set _UTorrentPath=C:\Users\Administrator\AppData\Roaming\uTorrent
 Set _UpdateIPTracker=N
 
 set _VuzeCheck=N
 set _VuzePath=C:\Program Files\Vuze
 
 set _EMBYCheck=N
-set _EMBYPath=C:\Users\PlexAdmin\AppData\Roaming\Emby-Server\System
+set _EMBYPath=C:\Users\Administrator\AppData\Roaming\Emby-Server\System
 
 set _PlexCheck=Y
 set _PlexPath=C:\Program Files (x86)\Plex\Plex Media Server
 
 set _RunPlexScannerList=N
-set _PlexListExportPath=C:\inetpub\wwwroot\trickysplexmc\db\PlexLibrary.txt
+set _PlexListExportPath=E:\Data\Plex\PlexLibrary.txt
 
 set _RunPlexWatch=N
 set _PlexWatchPath=E:\Data\Plex\plexWatch
