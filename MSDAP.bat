@@ -57,11 +57,16 @@ set _7ZipArchivePwd=Password
 set _SeedBoxCheckForRar=Y
 set _SeedBoxDownLocation=E:\Data\Downloads\Seedbox
 
+set _BtSyncCheckForFiles=Y
+set _BtSync_FolderLocation=E:\Data\Downloads\btsync
+set _BtSync_Secret_Key=ABCDEFGHIJKLMNOPQRSTUVWXYZ
+
 set _CompletedTorrents=E:\Data\Downloads\Torrents\Completed
 set _ProcessedTorrents=E:\Data\Downloads\Torrents\Processed
 set _DeletedTorrents=E:\Data\Downloads\Torrents\Deleted
 set _FailedTorrents=E:\Data\Downloads\Torrents\Failed
 
+set _BtSyncServiceCheck=Y
 Set _PlexServiceCheck=Y
 Set _SonarrServiceCheck=Y
 Set _EMBYServiceCheck=N
@@ -204,6 +209,17 @@ if !_TVRenameCheck! == Y (
 		ECHO RUNNING:     IPCAMS Photos Removal... >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
 		cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 60 "E:\Media\YIPC\IPCAM01" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
 		cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 60 "E:\Media\YIPC\IPCAM02" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+		if !_BtSyncCheckForFiles! == Y (
+			IF NOT EXIST "!_BtSync_FolderLocation!\.sync\*.!sync"  (
+				ECHO CHECK:       Checking Resilio syncronization folder
+				cscript //nologo "%~dp0scripts\deletefilesExtensions.vbs" "!_BtSync_FolderLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+				cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 30 "!_BtSync_FolderLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+				cscript //nologo "%~dp0scripts\deleteEmptyFolders.vbs" "!_BtSync_FolderLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+				IF NOT EXIST "!_BtSync_FolderLocation!\Folder Secret" ECHO !_BtSync_Secret_Key! > "!_BtSync_FolderLocation!\Folder Secret"
+			) ELSE (
+				ECHO CHECK:       Resilio is still syncronizing, skipping cleanup...
+			)
+		)
 	)
 	mkdir "!_SeedBoxDownLocation!" >NUL  2>NUL
 	mkdir "!_CompletedTorrents!" >NUL  2>NUL
@@ -313,6 +329,16 @@ if !_SonarrServiceCheck! == Y (
 	)
 )
 
+if !_BtSyncServiceCheck! == Y (
+	tasklist /FI "IMAGENAME eq Resilio Sync.exe" 2>NUL | find /I /N "Resilio Sync.exe">NUL
+	if !ERRORLEVEL! EQU 0 (
+		ECHO CHECK:       Resilio Sync service is started
+		ECHO CHECK: Resilio Sync is started >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	) ELSE (
+		net start rslsyncsvc
+		ECHO STARTING: Resilio Sync >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	)
+)
 
 if !_GenieCheck! == Y (
 	tasklist /FI "IMAGENAME eq NETGEARGenie.exe" 2>NUL | find /I /N "NETGEARGenie.exe">NUL
