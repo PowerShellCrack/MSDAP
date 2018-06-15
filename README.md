@@ -20,7 +20,7 @@ Script to automate feeding and downloading Movies and TV shows using various app
       - Check Password protected RAR files on seedbox (winscp)
       - Unzips Password protected RAR files (7zip)
       - Executes TVRename silently
-      - Downloads Torrent files using RSS feeds [Downloiad-RSSTorrent.ps1](https://github.com/PowerShellCrack/TorrentRSSDownloader.git)
+      - Downloads Torrent files using RSS feeds (Download-RSSTorrent.ps1)
       - Uploads Torrent Files to Seedbox (winscp)
       - Cleanup Files extensions, removes old logs and torrents, and remvoes empty Folders
       - Cleanups btsync folders as well
@@ -43,6 +43,10 @@ Script to automate feeding and downloading Movies and TV shows using various app
 
 # TIP: 
 This script works well as a schedule task hourly. Its built in scheduler will determine if it should process or not. Task Schedule export is provided.  
+
+# Links:
+[Download-RSSTorrent.ps1](https://github.com/PowerShellCrack/TorrentRSSDownloader.git)
+[PmsService](https://github.com/cjmurph/PmsService.git)
 
 # NOTES: 
 Software installed (most of them are optional) and other prerequsites:
