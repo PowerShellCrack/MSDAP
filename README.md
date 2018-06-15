@@ -12,7 +12,7 @@ Script to automate feeding and downloading Movies and TV shows using various app
 Looking to convert btach script to a more robust powershell script. 
 
 
-# Features (toggleable)
+# Features (configureable)
       - Schedule Run time
       - Kills UTorrent to
             Update IP filters
