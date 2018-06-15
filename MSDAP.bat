@@ -13,7 +13,6 @@ set _TVSourcePath=F:\Media\TV Series
 set _MVSourcePath=E:\Media\Movies
 set _BCKDestPath=E:\Media\TV Series
 
-
 set _DropboxCheck=N
 set _DropBoxSizeCheck=Y
 set _DropBoxSizeLimit=1,000,000,000
@@ -67,10 +66,12 @@ set _ProcessedTorrents=E:\Data\Downloads\Torrents\Processed
 set _DeletedTorrents=E:\Data\Downloads\Torrents\Deleted
 set _FailedTorrents=E:\Data\Downloads\Torrents\Failed
 
-set _BtSyncServiceCheck=Y
 Set _PlexServiceCheck=Y
-Set _SonarrServiceCheck=Y
 Set _EMBYServiceCheck=N
+set _BtSyncServiceCheck=Y
+Set _SonarrServiceCheck=Y
+Set _RadarrServiceCheck=Y
+Set _JackettServiceCheck=Y
 
 Set _OldFileCleanup=Y
 
@@ -351,6 +352,28 @@ if !_SonarrServiceCheck! == Y (
 	) ELSE (
 		net start NzbDrone
 		ECHO STARTING: SONARR service >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	)
+)
+
+if !_RadarrServiceCheck! == Y (
+	tasklist /FI "IMAGENAME eq Radarr.Console.exe" 2>NUL | find /I /N "Radarr.Console.exe">NUL
+	if !ERRORLEVEL! EQU 0 (
+		ECHO CHECK:       RADARR service is started
+		ECHO CHECK: RADARR service is started >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	) ELSE (
+		net start Radarr
+		ECHO STARTING: RADARR service >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	)
+)
+
+if !_JackettServiceCheck! == Y (
+	tasklist /FI "IMAGENAME eq JackettService.exe" 2>NUL | find /I /N "JackettService.exe">NUL
+	if !ERRORLEVEL! EQU 0 (
+		ECHO CHECK:       Jackett service is started
+		ECHO CHECK: Jackett service is started >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	) ELSE (
+		net start Jackett
+		ECHO STARTING: Jackett service >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
 	)
 )
 
