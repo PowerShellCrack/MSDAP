@@ -5,12 +5,9 @@ Monitor System, Downloads and Processes
 Script to automate feeding and downloading Movies and TV shows using various applications and tools via command line
 
 # Versions:
-  Version 1 - Batch
-  Version 2 - Powershell
-
-# GOAL:
-Looking to convert btach script to a more robust powershell script. 
-
+    Version 1 - Batch
+    Version 2 - Powershell
+        Looking to convert batch script to a more robust powershell script. 
 
 # FEATURES (configureable)
       - Schedule Run time
