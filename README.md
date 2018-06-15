@@ -37,7 +37,30 @@ Looking to convert btach script to a more robust powershell script.
       - Check UTorrent running
       - Check Sonarr Service
       - Check Radarr Service
+      - Check Jackett Service
       - Check BtSync (Resilio) Service
       - Check NETGEAR Genie running (for OpenDNS exemptions)
       - Dropbox Backup (robocopy)
       - File Backup (robocopy)
+      - Logs everything
+
+#TIP: This script works well as a schedule task hourly. Its built in schedular will determin if it should process the whole thing or not. Task Schedule export is provided.  
+
+# TIPs: 
+Software installed (most of them are optional) and other prerequsites:
+
+      - Plex Media Server
+      - Emby Media Server
+      - Sonarr
+      - Radarr
+      - Resilio (btsync)
+      - Winscp (place in bin folder)
+      - 7Zip Binares (place in bin folder)
+      - Download-RSSTorrent.ps1 (place in scripts folder)
+      - wget (place in bin folder)
+      - Utorrent
+      - Dropbox
+      - Azurues
+      - NetGear Genie
+      - Peerblock
+      - Jackett
