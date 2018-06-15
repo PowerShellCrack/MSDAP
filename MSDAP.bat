@@ -61,6 +61,7 @@ set _BtSyncCheckForFiles=Y
 set _BtSync_FolderLocation=E:\Data\Downloads\btsync
 set _BtSync_Secret_Key=ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
+set _RSSTorrentCheck=Y
 set _CompletedTorrents=E:\Data\Downloads\Torrents\Completed
 set _ProcessedTorrents=E:\Data\Downloads\Torrents\Processed
 set _DeletedTorrents=E:\Data\Downloads\Torrents\Deleted
@@ -81,10 +82,13 @@ IF EXIST "!_TVSourcePath!" (GOTO CONTINUE) ELSE (GOTO FDRIVEERROR)
 :CONTINUE
 REM =========== SCRIPT ========================================
 CLS
-ECHO.								
-ECHO	               TV Monitoring and Processing script		
-ECHO.								
-ECHO	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ECHO	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ECHO	³									³
+ECHO	³									³
+ECHO	³                 TV Monitoring and Processing script                   ³
+ECHO	³									³
+ECHO	³									³
+ECHO	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 ECHO.
 FOR /F "tokens=1 delims=:" %%A IN ('ECHO %time%') DO (
 	ECHO CHECK:       Current Hour is: %%A
@@ -100,9 +104,11 @@ FOR /F "tokens=1 delims=:" %%A IN ('ECHO %time%') DO (
 	REM Run if start time is within the start and end hours
 	if [!_H1!!_H2!] == [YY] (
 		REM Close programs during processing then start it back up
-		ECHO ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-		ECHO  VERIFIED:     It IS within the hours set, processing episodes 
-		ECHO ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+		ECHO	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		ECHO	³									³
+		ECHO	³    VERIFIED:     It IS within the hours set, processing episodes      ³
+		ECHO	³									³
+		ECHO	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 		ECHO RUNNING:     Processing TV Shows...
 		ECHO ACTIVATE: Processing TV Shows... >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
 		if !_uTorrentCheck! == Y (	
@@ -162,10 +168,11 @@ FOR /F "tokens=1 delims=:" %%A IN ('ECHO %time%') DO (
 		
 		
 	) ELSE (
-   
-		ECHO ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-		ECHO  VERIFIED:      It is NOT within the hours set, not processing episodes 
-		ECHO ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+		ECHO	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		ECHO	³									³
+		ECHO	³ VERIFIED:    It is NOT within the hours set, not processing episodes  ³
+		ECHO	³									³
+		ECHO	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	)
 )
 
@@ -177,54 +184,72 @@ if !_TVRenameCheck! == Y (
 	ECHO RUNNING: Scanning download folder for missing TV shows >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
 	REM SWITCH TO USE: /hide /ignoremissing /createmissing /scan /doall /quit
 	"!_TVRenamePath!\TVRename.exe" /hide /createmissing /doall
-	
-	:RSSTORRENT
-	timeout 5 > NUL	
-	powershell -ExecutionPolicy bypass -noprofile -file "%~dp0scripts\Get-RSSTorrents.ps1"
-	If !ERRORLEVEL! EQU 1 GOTO RSSTORRENT
-	If !ERRORLEVEL! EQU 2 GOTO MOVE
-	If !ERRORLEVEL! EQU 3 GOTO UPLOAD
-	
-	:UPLOAD
-	"%~dp0bin\winscp.com" /script="%~dp0configs\winscp-uploadfiles.txt"
-	If !ERRORLEVEL! NEQ 0 GOTO CLEANUP
 
-	:MOVE
-	move "E:\Data\Downloads\Torrents\Files\*.torrent" "!_ProcessedTorrents!">NUL
+	
+	if !_RSSTorrentCheck! == Y (
+		ECHO	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		ECHO	³									³
+		ECHO	³  SEARCH: RSS feeds for Torrents based on TVRename Missing Shows List  ³
+		ECHO	³									³
+		ECHO	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		:RSSTORRENT
+		timeout 5 > NUL	
+		powershell -ExecutionPolicy bypass -noprofile -file "%~dp0scripts\Get-RSSTorrents.ps1"
+		If !ERRORLEVEL! EQU 1 GOTO RSSTORRENT
+		If !ERRORLEVEL! EQU 2 GOTO MOVE
+		If !ERRORLEVEL! EQU 3 GOTO UPLOAD
+	
+		:UPLOAD
+		"%~dp0bin\winscp.com" /script="%~dp0configs\winscp-uploadfiles.txt"
+		If !ERRORLEVEL! NEQ 0 GOTO CLEANUP
 
-	:CLEANUP
-	if !_OldFileCleanup! == Y (
-		ECHO RUNNING:     File Cleanup.. 
-		ECHO RUNNING:     File Cleanup... >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		cscript //nologo "%~dp0scripts\deletefilesExtensions.vbs" "!_TVSourcePath!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		::cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 14 "!_CompletedTorrents!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 30 "!_DeletedTorrents!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 14 "!_SeedBoxDownLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 30 "!_ProcessedTorrents!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 7 "%~dp0logs" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		::cscript //nologo "%~dp0scripts\deleteEmptyFolders.vbs" "!_CompletedTorrents!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		ECHO This file is a place holder so this folder does not get deleted > "!_SeedBoxDownLocation!\keep_me_safe"
-		cscript //nologo "%~dp0scripts\deleteEmptyFolders.vbs" "!_SeedBoxDownLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		ECHO RUNNING:     IPCAMS Photos Removal...  
-		ECHO RUNNING:     IPCAMS Photos Removal... >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 60 "E:\Media\YIPC\IPCAM01" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 60 "E:\Media\YIPC\IPCAM02" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-		if !_BtSyncCheckForFiles! == Y (
-			IF NOT EXIST "!_BtSync_FolderLocation!\.sync\*.!sync"  (
-				ECHO CHECK:       Checking Resilio syncronization folder
-				cscript //nologo "%~dp0scripts\deletefilesExtensions.vbs" "!_BtSync_FolderLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-				cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 30 "!_BtSync_FolderLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-				cscript //nologo "%~dp0scripts\deleteEmptyFolders.vbs" "!_BtSync_FolderLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
-				IF NOT EXIST "!_BtSync_FolderLocation!\Folder Secret" ECHO !_BtSync_Secret_Key! > "!_BtSync_FolderLocation!\Folder Secret"
-			) ELSE (
-				ECHO CHECK:       Resilio is still syncronizing, skipping cleanup...
-			)
+		:MOVE
+		move "E:\Data\Downloads\Torrents\Files\*.torrent" "!_ProcessedTorrents!">NUL
+	)
+)
+
+:CLEANUP
+if !_OldFileCleanup! == Y (
+	ECHO	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	ECHO	³									³
+	ECHO	³   CLEANUP: Removing old files, unused extensions and empty folders    ³
+	ECHO	³									³
+	ECHO	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	ECHO RUNNING:     File Cleanup.. 
+	ECHO RUNNING:     File Cleanup... >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	cscript //nologo "%~dp0scripts\deletefilesExtensions.vbs" "!_TVSourcePath!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	::cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 14 "!_CompletedTorrents!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 30 "!_DeletedTorrents!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 14 "!_SeedBoxDownLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 30 "!_ProcessedTorrents!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 7 "%~dp0logs" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	::cscript //nologo "%~dp0scripts\deleteEmptyFolders.vbs" "!_CompletedTorrents!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	ECHO This file is a place holder so this folder does not get deleted > "!_SeedBoxDownLocation!\keep_me_safe"
+	cscript //nologo "%~dp0scripts\deleteEmptyFolders.vbs" "!_SeedBoxDownLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	ECHO RUNNING:     IPCAMS Photos Removal...  
+	ECHO RUNNING:     IPCAMS Photos Removal... >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 60 "E:\Media\YIPC\IPCAM01" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 60 "E:\Media\YIPC\IPCAM02" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+	if !_BtSyncCheckForFiles! == Y (
+		IF NOT EXIST "!_BtSync_FolderLocation!\.sync\*.!sync"  (
+			ECHO CHECK:       Checking Resilio syncronization folder
+			cscript //nologo "%~dp0scripts\deletefilesExtensions.vbs" "!_BtSync_FolderLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+			cscript //nologo "%~dp0scripts\keepOnlyRecent.vbs" 30 "!_BtSync_FolderLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+			cscript //nologo "%~dp0scripts\deleteEmptyFolders.vbs" "!_BtSync_FolderLocation!" >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+			IF NOT EXIST "!_BtSync_FolderLocation!\Folder Secret" ECHO !_BtSync_Secret_Key! > "!_BtSync_FolderLocation!\Folder Secret"
+		) ELSE (
+			ECHO CHECK:       Resilio is still syncronizing, skipping cleanup...
 		)
 	)
 	mkdir "!_SeedBoxDownLocation!" >NUL  2>NUL
 	mkdir "!_CompletedTorrents!" >NUL  2>NUL
 )
 
+ECHO	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ECHO	³									³
+ECHO	³            SERVICES: Check to ensure processes are running            ³
+ECHO	³									³
+ECHO	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 ECHO RUNNING:      Check running processes... >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
 REM !!! PLEX SERVER PROCESS CHECK !!!
 if !_PlexServiceCheck! == Y (
@@ -396,15 +421,29 @@ ECHO END: Script finished: !DATEANDTIME! >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
 GOTO EOF
 
 :EDRIVEERROR
+ECHO	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ECHO	³									³
+ECHO	³                     FAILED: Missing E drive                           ³
+ECHO	³									³
+ECHO	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 ECHO END: Script unable to finish, missing E: drive: !DATEANDTIME! >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
 GOTO EOF
 
 :FDRIVEERROR
+ECHO	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ECHO	³									³
+ECHO	³                     FAILED: Missing F drive                           ³
+ECHO	³									³
+ECHO	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 ECHO END: Script unable to finish, missing F: drive: !DATEANDTIME! >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
 GOTO EOF
 
-
 :EOF
 ECHO ========================================== >> "%~dp0logs\MSDAP-!DATESTAMP!.log"
+ECHO	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ECHO	³									³
+ECHO	³                              COMPLETED                                ³
+ECHO	³									³
+ECHO	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 timeout 10
 EXIT
