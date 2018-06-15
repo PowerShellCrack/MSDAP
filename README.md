@@ -2,7 +2,7 @@
 Monitor System, Downloads and Processes
 
 # What it does
-Script to automate feeding and downloading Movies and TV shows using various applications and tools via command line
+Script to automate feeding and downloading TV shows using various applications and tools via command line. This script is not needed with most of the software below working together. However this script just does a "double take" on areas that might be missed. 
 
 # Versions:
     Version 1 - Batch
@@ -24,7 +24,7 @@ Script to automate feeding and downloading Movies and TV shows using various app
       - Uploads Torrent Files to Seedbox (winscp)
       - Cleanup Files extensions, removes old logs and torrents, and remvoes empty Folders
       - Cleanups btsync folders as well
-      - Checks Plex Service (https://github.com/cjmurph/PmsService.git)
+      - Checks Plex Service (PmsService)
       - Checks Plex Watch 
       - Run PlexScanner cli to output library list (to use elsehere, eg: website, database)
       - Check Plex is running
@@ -53,6 +53,7 @@ This script works well as a schedule task hourly. Its built in scheduler will de
 Software installed (most of them are optional) and other prerequsites:
 
       - Plex Media Server
+      - Plex Media Server Service
       - Emby Media Server
       - Sonarr
       - Radarr
@@ -67,3 +68,5 @@ Software installed (most of them are optional) and other prerequsites:
       - NetGear Genie
       - Peerblock
       - Jackett
+
+If your interested in how to configure each of these so they all work together, send me a message
