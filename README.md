@@ -12,7 +12,7 @@ Script to automate feeding and downloading Movies and TV shows using various app
 Looking to convert btach script to a more robust powershell script. 
 
 
-# Features (configureable)
+# FEATURES (configureable)
       - Schedule Run time
       - Kills UTorrent to
             Update IP filters
@@ -44,9 +44,10 @@ Looking to convert btach script to a more robust powershell script.
       - File Backup (robocopy)
       - Logs everything
 
-#TIP: This script works well as a schedule task hourly. Its built in schedular will determin if it should process the whole thing or not. Task Schedule export is provided.  
+# TIP: 
+This script works well as a schedule task hourly. Its built in scheduler will determine if it should process or not. Task Schedule export is provided.  
 
-# TIPs: 
+# NOTES: 
 Software installed (most of them are optional) and other prerequsites:
 
       - Plex Media Server
@@ -54,10 +55,10 @@ Software installed (most of them are optional) and other prerequsites:
       - Sonarr
       - Radarr
       - Resilio (btsync)
-      - Winscp (place in bin folder)
+      - Winscp Binares (place in bin folder)
       - 7Zip Binares (place in bin folder)
       - Download-RSSTorrent.ps1 (place in scripts folder)
-      - wget (place in bin folder)
+      - wget Binares (place in bin folder)
       - Utorrent
       - Dropbox
       - Azurues
